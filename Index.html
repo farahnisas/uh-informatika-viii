@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ulangan Harian Informatika Kelas VIII</title>
+<style>
+:root{--bg1:#0b1220;--bg2:#121d31;--panel:#17243a;--panel2:#1e2e48;--line:#31435f;--text:#f3f7ff;--muted:#9eb0ca;--blue:#6ea8fe;--mint:#7ce5c7;--red:#ff7d8a}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at 12% 8%,#243d67 0,transparent 34%),radial-gradient(circle at 88% 88%,#16484b 0,transparent 30%),linear-gradient(135deg,var(--bg1),var(--bg2))}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.shell{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+.card{width:min(1080px,100%);height:min(720px,94vh);background:rgba(23,36,58,.96);border:1px solid var(--line);border-radius:26px;box-shadow:0 25px 80px rgba(0,0,0,.35);overflow:hidden}
+.start{display:grid;grid-template-columns:1.1fr .9fr}
+.hero{padding:48px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(145deg,rgba(36,60,101,.75),rgba(23,36,58,.35))}
+.mark{font-size:12px;letter-spacing:.13em;font-weight:900;color:var(--mint)}
+.hero h1{font-size:44px;line-height:1.08;margin:18px 0 12px}
+.hero p{color:var(--muted);line-height:1.65;max-width:570px}
+.stats{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.stat{border:1px solid var(--line);background:rgba(30,46,72,.8);border-radius:12px;padding:11px 13px;font-size:13px;color:var(--muted)}
+.stat b{color:var(--text);margin-right:4px}
+.form{padding:42px;display:flex;flex-direction:column;justify-content:center;background:rgba(12,20,34,.28)}
+label{font-size:13px;font-weight:800;margin:12px 0 7px}
+input,select{width:100%;padding:14px 15px;border-radius:12px;border:1px solid var(--line);background:#0e192a;color:var(--text);outline:none}
+input:focus,select:focus{border-color:var(--blue)}
+.btn{border:0;border-radius:12px;padding:14px 18px;font-weight:900}
+.primary{background:linear-gradient(135deg,var(--blue),#7180ff);color:white}
+.primary:disabled{opacity:.5;cursor:not-allowed}
+.startbtn{width:100%;margin-top:18px}
+.note{font-size:12px;color:var(--muted);line-height:1.55;margin-top:14px}
+.exam{width:min(1080px,100%);height:min(720px,94vh);display:grid;grid-template-rows:auto 1fr auto}
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line);background:rgba(13,22,37,.75)}
+.titlemini{font-size:13px;font-weight:900;letter-spacing:.05em} .meta{display:flex;gap:8px;align-items:center}
+.pill{padding:8px 11px;border-radius:99px;background:#22334e;border:1px solid var(--line);font-size:12px;font-weight:900}
+.timer{color:#ffd29c;background:#3e3125} .timer.warn{color:#ffb0b0;background:#4b2b33}
+.body{display:grid;grid-template-columns:1fr 240px;min-height:0}
+.questionarea{padding:34px 38px;display:flex;flex-direction:column;min-height:0}
+.progress{height:7px;background:#0d1829;border-radius:99px;overflow:hidden;margin-bottom:25px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--mint))}
+.level{font-size:11px;letter-spacing:.12em;font-weight:900;color:var(--mint);text-transform:uppercase}
+.question{font-size:24px;line-height:1.45;margin:12px 0 18px;overflow:auto}
+.options{margin-top:3px}
+.option{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#16253b;color:var(--text);border-radius:12px;padding:14px 15px;margin:9px 0}
+.option.selected{border:2px solid var(--blue);background:#1e3658}
+.nav{margin-top:auto;display:flex;gap:10px;padding-top:15px}
+.nav .btn{flex:1}
+.side{border-left:1px solid var(--line);padding:20px;min-height:0;background:rgba(11,19,32,.35)}
+.side h3{font-size:14px;margin:0 0 13px} .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.num{padding:9px 0;border-radius:8px;border:1px solid var(--line);background:#142238;color:var(--muted);font-weight:800;font-size:12px}
+.num.done{background:#194137;color:#a5f1dd} .num.current{outline:2px solid var(--blue);color:white}
+.footer{padding:10px 20px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+.result{width:min(700px,100%);padding:40px;text-align:center}
+.result h1{font-size:32px;margin:10px 0}
+.score{font-size:82px;font-weight:950;background:linear-gradient(90deg,var(--blue),var(--mint));color:transparent;background-clip:text}
+.resultgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0;text-align:left}
+.resultitem{background:#1d2d47;border:1px solid var(--line);padding:14px;border-radius:12px}
+.resultitem small{color:var(--muted)} .resultitem b{display:block;font-size:20px;margin-top:4px}
+.hidden{display:none!important}
+@media(max-width:800px){.start{grid-template-columns:1fr}.hero{display:none}.form{padding:30px}.body{grid-template-columns:1fr}.side{display:none}.card,.exam{height:100vh;max-height:none;border-radius:0}.questionarea{padding:24px 18px}.question{font-size:20px}.footer{display:none}}
+</style>
+</head>
+<body>
+<div id="startScreen" class="shell">
+<div class="card start">
+<div class="hero">
+<div class="mark">SISTEM UJIAN BERBASIS WEB</div>
+<h1>ULANGAN HARIAN<br>INFORMATIKA KELAS VIII</h1>
+<p><b>Bab II</b> · Fungsi · Himpunan · Sistem Bilangan · Struktur Data (Stack)</p>
+<div class="stats">
+<div class="stat"><b>25</b> soal</div><div class="stat"><b>60 menit</b></div><div class="stat"><b>PG</b> pilihan ganda</div>
+</div>
+</div>
+<div class="form">
+<label>Nama Lengkap</label><input id="name" autocomplete="off" placeholder="Masukkan nama lengkap">
+<label>Kelas</label><select id="class"><option value="">Pilih kelas</option><option>VIII A</option><option>VIII B</option><option>VIII C</option><option>VIII D</option><option>VIII E</option><option>VIII F</option><option>VIII G</option></select>
+<label>Nomor Absen</label><input id="absen" inputmode="numeric" autocomplete="off" placeholder="Contoh: 12">
+<button class="btn primary startbtn" onclick="startExam()">MULAI ULANGAN</button>
+<div class="note">Waktu berjalan setelah tombol mulai ditekan. Kerjakan secara mandiri. Sistem akan memberi peringatan jika kamu berpindah tab.</div>
+</div>
+</div>
+</div>
+
+<div id="examScreen" class="shell hidden">
+<div class="card exam">
+<header class="header"><div class="titlemini">ULANGAN HARIAN INFORMATIKA VIII</div><div class="meta"><span id="counter" class="pill"></span><span id="timer" class="pill timer">60:00</span></div></header>
+<div class="body">
+<main class="questionarea">
+<div class="progress"><div id="bar" class="bar"></div></div>
+<div id="level" class="level"></div>
+<h2 id="question" class="question"></h2>
+<div id="options" class="options"></div>
+<div class="nav"><button class="btn" style="background:#253650;color:white" onclick="prevQuestion()">← Sebelumnya</button><button id="nextBtn" class="btn primary" onclick="nextQuestion()">Berikutnya →</button></div>
+</main>
+<aside class="side"><h3>Nomor Soal</h3><div id="numbers" class="grid"></div></aside>
+</div>
+<footer class="footer"><span>25 soal • LOTS • MOTS • HOTS • literasi • numerasi</span><span id="saveStatus">Belum dikirim</span></footer>
+</div>
+</div>
+
+<div id="resultScreen" class="shell hidden">
+<div class="card result">
+<div class="mark">HASIL ULANGAN</div>
+<h1 id="resultName"></h1>
+<div id="score" class="score">0</div>
+<p id="summary"></p>
+<div id="resultGrid" class="resultgrid"></div>
+<p id="sendMessage" class="note"></p>
+<button class="btn primary startbtn" onclick="location.reload()">SELESAI</button>
+</div>
+</div>
+
+<script>
+const QUESTIONS=[{"level": "LOTS", "materi": "Fungsi", "q": "Dalam konsep fungsi, data yang dimasukkan sebelum diproses disebut ...", "o": ["output", "input", "proses", "hasil"], "a": 1}, {"level": "LOTS", "materi": "Fungsi", "q": "Bagian dari fungsi yang mengubah input menjadi hasil disebut ...", "o": ["input", "output", "proses", "data"], "a": 2}, {"level": "MOTS", "materi": "Fungsi", "q": "Diketahui f(x)=2x+3. Nilai f(5) adalah ...", "o": ["10", "11", "13", "15"], "a": 2}, {"level": "HOTS", "materi": "Fungsi", "q": "Sebuah toko menggunakan aturan f(x)=0,8x untuk harga setelah diskon 20%. Jika harga awal Rp125.000, hasil f(x) adalah ...", "o": ["Rp95.000", "Rp100.000", "Rp105.000", "Rp110.000"], "a": 1}, {"level": "MOTS", "materi": "Fungsi", "q": "Sebuah program menerima 135 menit sebagai input dan mengubahnya menjadi jam dan menit. Output yang tepat adalah ...", "o": ["1 jam 15 menit", "2 jam 5 menit", "2 jam 15 menit", "3 jam 15 menit"], "a": 2}, {"level": "LOTS", "materi": "Himpunan", "q": "Diketahui A={1,2,3,4} dan B={3,4,5,6}. Hasil A ∩ B adalah ...", "o": ["{1,2}", "{3,4}", "{1,2,3,4,5,6}", "{5,6}"], "a": 1}, {"level": "LOTS", "materi": "Himpunan", "q": "Diketahui A={a,b,c} dan B={c,d}. Hasil A ∪ B adalah ...", "o": ["{c}", "{a,b,d}", "{a,b,c,d}", "{a,c,d}"], "a": 2}, {"level": "MOTS", "materi": "Himpunan", "q": "A adalah siswa yang mengikuti klub coding dan B adalah siswa yang mengikuti klub desain. Siswa yang mengikuti kedua klub termasuk ...", "o": ["A ∪ B", "A ∩ B", "A − B", "B − A"], "a": 1}, {"level": "HOTS", "materi": "Himpunan", "q": "Dalam survei 32 siswa, 19 menyukai pemrograman, 16 menyukai desain, dan 7 menyukai keduanya. Banyak siswa yang menyukai setidaknya salah satu adalah ...", "o": ["25", "28", "30", "35"], "a": 1}, {"level": "LOTS", "materi": "Himpunan", "q": "Himpunan adalah kumpulan objek yang ...", "o": ["selalu berupa angka", "anggotanya harus banyak", "dapat didefinisikan dengan jelas", "selalu disusun dari kecil ke besar"], "a": 2}, {"level": "LOTS", "materi": "Sistem Bilangan", "q": "Sistem bilangan desimal menggunakan basis ...", "o": ["2", "8", "10", "16"], "a": 2}, {"level": "LOTS", "materi": "Sistem Bilangan", "q": "Sistem bilangan biner hanya menggunakan simbol ...", "o": ["0 dan 1", "1 dan 2", "0 sampai 7", "0 sampai 9"], "a": 0}, {"level": "LOTS", "materi": "Sistem Bilangan", "q": "Sistem bilangan heksadesimal menggunakan basis ...", "o": ["8", "10", "12", "16"], "a": 3}, {"level": "MOTS", "materi": "Sistem Bilangan", "q": "Dalam heksadesimal, simbol setelah 9 adalah ...", "o": ["A", "B", "10", "F"], "a": 0}, {"level": "MOTS", "materi": "Sistem Bilangan", "q": "Bilangan desimal 13 jika dikonversi ke biner adalah ...", "o": ["1010₂", "1011₂", "1101₂", "1110₂"], "a": 2}, {"level": "MOTS", "materi": "Sistem Bilangan", "q": "Bilangan biner 1011₂ jika dikonversi ke desimal adalah ...", "o": ["9", "10", "11", "12"], "a": 2}, {"level": "MOTS", "materi": "Sistem Bilangan", "q": "Bilangan desimal 24 jika dikonversi ke oktal adalah ...", "o": ["26₈", "30₈", "32₈", "34₈"], "a": 1}, {"level": "HOTS", "materi": "Sistem Bilangan", "q": "Sebuah sensor mengirim kode 100000₂. Seorang siswa mengatakan nilainya 16 karena ada enam digit. Pernyataan yang benar adalah ...", "o": ["Benar, enam digit berarti 16", "Salah, 100000₂ bernilai 32", "Benar, karena 2⁴=16", "Salah, nilainya 64"], "a": 1}, {"level": "HOTS", "materi": "Sistem Bilangan", "q": "Urutan 1₂, 10₂, 11₂, 100₂ jika diubah ke desimal menjadi ...", "o": ["1, 2, 3, 4", "1, 2, 3, 5", "1, 2, 4, 8", "1, 3, 4, 5"], "a": 0}, {"level": "LOTS", "materi": "Struktur Data", "q": "Struktur data adalah cara ...", "o": ["menghias tampilan program", "mengatur dan menyimpan data agar dapat digunakan dengan efektif", "menghubungkan komputer ke internet", "mengubah bahasa pemrograman"], "a": 1}, {"level": "LOTS", "materi": "Stack", "q": "Stack adalah struktur data yang bekerja seperti ...", "o": ["antrean loket", "tumpukan piring", "daftar hadir", "jaringan komputer"], "a": 1}, {"level": "LOTS", "materi": "Stack", "q": "Prinsip utama pada Stack adalah ...", "o": ["FIFO", "LIFO", "acak masuk acak keluar", "first in first out"], "a": 1}, {"level": "LOTS", "materi": "Stack", "q": "Operasi untuk menambahkan data ke Stack disebut ...", "o": ["pop", "push", "peek", "sort"], "a": 1}, {"level": "LOTS", "materi": "Stack", "q": "Operasi untuk mengambil/menghapus data paling atas dari Stack disebut ...", "o": ["push", "pop", "peek", "insert"], "a": 1}, {"level": "HOTS", "materi": "Stack", "q": "Sebuah Stack berisi A, B, C (C paling atas). Dilakukan pop, lalu push D. Jika dilakukan pop lagi, urutan data yang keluar adalah ...", "o": ["A lalu B", "C lalu D", "B lalu D", "D lalu C"], "a": 1}];
+const SHEET_WEB_APP_URL="https://script.google.com/macros/s/AKfycbyIcSForpofbfrax-0ktDXIJkRgmLgdeeUdGTxdemirM_PyJaQweEXvR8226pVMoe0X/exec";
+let order=[],answers=[],current=0,seconds=3600,timerId=null,started=false,tabWarnings=0;
+
+function startExam(){
+ const n=document.getElementById('name').value.trim(),c=document.getElementById('class').value,a=document.getElementById('absen').value.trim();
+ if(!n||!c||!a){alert('Nama, kelas, dan nomor absen harus diisi.');return;}
+ order=[...Array(QUESTIONS.length).keys()].sort(()=>Math.random()-0.5);
+ answers=Array(QUESTIONS.length).fill(null); current=0; seconds=3600; started=true;
+ document.getElementById('startScreen').classList.add('hidden');document.getElementById('examScreen').classList.remove('hidden');
+ try{document.documentElement.requestFullscreen?.()}catch(e){}
+ document.addEventListener('visibilitychange',visibilityHandler);
+ timerId=setInterval(()=>{seconds--;updateTimer();if(seconds<=0)finishExam(true)},1000);
+ render();
+}
+function visibilityHandler(){
+ if(started && document.hidden){tabWarnings++;alert('Peringatan: jangan berpindah tab selama ulangan.')} 
+}
+function updateTimer(){
+ const m=String(Math.floor(seconds/60)).padStart(2,'0'),s=String(seconds%60).padStart(2,'0'),t=document.getElementById('timer');
+ t.textContent=m+':'+s;t.className='pill timer'+(seconds<=300?' warn':'');
+}
+function render(){
+ const idx=order[current],x=QUESTIONS[idx];
+ document.getElementById('counter').textContent=`Soal ${current+1} / ${QUESTIONS.length}`;
+ document.getElementById('level').textContent=`${x.level} • ${x.materi}`;
+ document.getElementById('question').textContent=x.q;
+ const box=document.getElementById('options');box.innerHTML='';
+ x.o.forEach((v,k)=>{const b=document.createElement('button');b.className='option'+(answers[idx]===k?' selected':'');b.textContent=String.fromCharCode(65+k)+'. '+v;b.onclick=()=>{answers[idx]=k;render()};box.appendChild(b)});
+ document.getElementById('bar').style.width=((current+1)/QUESTIONS.length*100)+'%';
+ document.getElementById('nextBtn').textContent=current===QUESTIONS.length-1?'Kumpulkan ✓':'Berikutnya →';
+ drawNumbers();
+}
+function drawNumbers(){
+ const g=document.getElementById('numbers');g.innerHTML='';
+ order.forEach((idx,pos)=>{const b=document.createElement('button');b.className='num'+(answers[idx]!==null?' done':'')+(pos===current?' current':'');b.textContent=pos+1;b.onclick=()=>{current=pos;render()};g.appendChild(b)});
+}
+function nextQuestion(){
+ if(answers[order[current]]===null && !confirm('Soal ini belum dijawab. Tetap lanjut?'))return;
+ if(current===QUESTIONS.length-1){if(confirm('Yakin mengumpulkan jawaban sekarang?'))finishExam(false)}else{current++;render()}
+}
+function prevQuestion(){if(current>0){current--;render()}}
+function finishExam(auto){
+ if(!started)return;started=false;clearInterval(timerId);timerId=null;
+ let correct=0,stats={LOTS:[0,0],MOTS:[0,0],HOTS:[0,0]};
+ QUESTIONS.forEach((x,i)=>{stats[x.level][1]++;if(answers[i]===x.a){correct++;stats[x.level][0]++}});
+ const score=Math.round(correct/QUESTIONS.length*100),used=Math.min(60,Math.ceil((3600-seconds)/60));
+ document.getElementById('examScreen').classList.add('hidden');document.getElementById('resultScreen').classList.remove('hidden');
+ document.getElementById('resultName').textContent=document.getElementById('name').value;
+ document.getElementById('score').textContent=score;
+ document.getElementById('summary').textContent=`$ {correct} dari ${QUESTIONS.length} jawaban benar • waktu sekitar ${used} menit`;
+ const rg=document.getElementById('resultGrid');rg.innerHTML='';
+ ['LOTS','MOTS','HOTS'].forEach(k=>{const d=document.createElement('div');d.className='resultitem';d.innerHTML=`<small>${k}</small><b>${stats[k][0]} / ${stats[k][1]}</b>`;rg.appendChild(d)});
+ document.getElementById('sendMessage').textContent='Mengirim hasil ke spreadsheet...';
+ sendToSheet(score,correct,stats,used,auto).then(ok=>{document.getElementById('sendMessage').textContent=ok?'✓ Hasil sudah dikirim ke Google Sheets.':'⚠️ Hasil belum tersambung ke Google Sheets. Periksa URL Apps Script pada file.'});
+ try{document.exitFullscreen?.()}catch(e){}
+}
+async function sendToSheet(score,correct,stats,used,auto){
+ if(!SHEET_WEB_APP_URL || SHEET_WEB_APP_URL.includes('PASTE_URL'))return false;
+ const payload={
+  timestamp:new Date().toISOString(),
+  nama:document.getElementById('name').value.trim(),
+  kelas:document.getElementById('class').value,
+  absen:document.getElementById('absen').value.trim(),
+  nilai:score,benar:correct,salah:QUESTIONS.length-correct,
+  lots:`${stats.LOTS[0]}/${stats.LOTS[1]}`,mots:`${stats.MOTS[0]}/${stats.MOTS[1]}`,hots:`${stats.HOTS[0]}/${stats.HOTS[1]}`,
+  waktu_menit:used,peringatan_pindah_tab:tabWarnings,otomatis_waktu_habis:auto
+ };
+ try{await fetch(SHEET_WEB_APP_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});return true}catch(e){return false}
+}
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('copy',e=>e.preventDefault());
+document.addEventListener('cut',e=>e.preventDefault());
+document.addEventListener('paste',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['c','v','x','u','s','p'].includes(e.key.toLowerCase()))e.preventDefault();if(e.key==='F12')e.preventDefault()});
+</script>
+</body>
+</html>
