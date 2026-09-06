@@ -59,6 +59,24 @@ input:focus,select:focus{border-color:var(--blue)}
 .resultitem small{color:var(--muted)} .resultitem b{display:block;font-size:20px;margin-top:4px}
 .hidden{display:none!important}
 @media(max-width:800px){.start{grid-template-columns:1fr}.hero{display:none}.form{padding:30px}.body{grid-template-columns:1fr}.side{display:none}.card,.exam{height:100vh;max-height:none;border-radius:0}.questionarea{padding:24px 18px}.question{font-size:20px}.footer{display:none}}
+
+/* V3 visual upgrade */
+body:before,body:after{content:"";position:fixed;width:240px;height:240px;border-radius:50%;filter:blur(40px);opacity:.18;pointer-events:none;animation:float 8s ease-in-out infinite alternate}
+body:before{background:#7c6cff;left:-70px;top:10%}body:after{background:#27d9c7;right:-80px;bottom:5%;animation-delay:-3s}
+@keyframes float{to{transform:translate(30px,25px) scale(1.1)}}
+.option{transition:transform .18s ease,background .18s ease,border-color .18s ease;display:flex;gap:10px;align-items:flex-start}
+.option:hover{transform:translateX(4px)}
+.letter{min-width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:rgba(255,255,255,.08);font-weight:900}
+.option.selected .letter{background:#6ea8fe}
+.slide-in{animation:slideIn .28s ease}@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+.soundBtn{border:1px solid var(--line);background:#22334e;color:white;border-radius:99px;padding:8px 11px;font-weight:900}
+<style>@keyframes fall{to{transform:translateY(760px) rotate(720deg);opacity:0}}
+.q-illustration{display:flex;align-items:center;gap:16px;padding:14px 16px;margin-bottom:18px;border:1px solid rgba(126,166,230,.28);border-radius:18px;background:linear-gradient(135deg,rgba(65,93,140,.25),rgba(26,50,74,.38));animation:floatIn .45s ease both}
+.illus-icon{font-size:34px;letter-spacing:5px;min-width:120px}
+.illus-lines{flex:1;display:grid;gap:7px}.illus-lines span{height:7px;border-radius:99px;background:rgba(255,255,255,.12)}
+.illus-lines span:nth-child(1){width:72%}.illus-lines span:nth-child(2){width:48%}.illus-lines span:nth-child(3){width:60%}
+.q-text{font-size:20px;line-height:1.55;font-weight:750}
+@keyframes floatIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -76,7 +94,7 @@ input:focus,select:focus{border-color:var(--blue)}
 <label>Nama Lengkap</label><input id="name" autocomplete="off" placeholder="Masukkan nama lengkap">
 <label>Kelas</label><select id="class"><option value="">Pilih kelas</option><option>VIII A</option><option>VIII B</option><option>VIII C</option><option>VIII D</option><option>VIII E</option><option>VIII F</option><option>VIII G</option></select>
 <label>Nomor Absen</label><input id="absen" inputmode="numeric" autocomplete="off" placeholder="Contoh: 12">
-<button class="btn primary startbtn" onclick="startExam()">MULAI ULANGAN</button>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px"><span class="note" style="margin:0">🎧 Suasana ujian</span><button id="soundBtn" class="soundBtn" type="button" onclick="toggleSound()">OFF</button></div><button class="btn primary startbtn" onclick="startExam()">MULAI ULANGAN</button>
 <div class="note">Waktu berjalan setelah tombol mulai ditekan. Kerjakan secara mandiri. Sistem akan memberi peringatan jika kamu berpindah tab.</div>
 </div>
 </div>
@@ -84,7 +102,7 @@ input:focus,select:focus{border-color:var(--blue)}
 
 <div id="examScreen" class="shell hidden">
 <div class="card exam">
-<header class="header"><div class="titlemini">ULANGAN HARIAN INFORMATIKA VIII</div><div class="meta"><span id="counter" class="pill"></span><span id="timer" class="pill timer">60:00</span></div></header>
+<header class="header"><div class="titlemini">ULANGAN HARIAN INFORMATIKA VIII</div><div class="meta"><button id="miniSound" class="soundBtn" type="button" onclick="toggleSound()">🔇</button><span id="counter" class="pill"></span><span id="timer" class="pill timer">60:00</span></div></header>
 <div class="body">
 <main class="questionarea">
 <div class="progress"><div id="bar" class="bar"></div></div>
@@ -112,10 +130,43 @@ input:focus,select:focus{border-color:var(--blue)}
 </div>
 
 <script>
-const QUESTIONS=[{"level": "LOTS", "materi": "Fungsi", "q": "Dalam konsep fungsi, data yang dimasukkan sebelum diproses disebut ...", "o": ["output", "input", "proses", "hasil"], "a": 1}, {"level": "LOTS", "materi": "Fungsi", "q": "Bagian dari fungsi yang mengubah input menjadi hasil disebut ...", "o": ["input", "output", "proses", "data"], "a": 2}, {"level": "MOTS", "materi": "Fungsi", "q": "Diketahui f(x)=2x+3. Nilai f(5) adalah ...", "o": ["10", "11", "13", "15"], "a": 2}, {"level": "HOTS", "materi": "Fungsi", "q": "Sebuah toko menggunakan aturan f(x)=0,8x untuk harga setelah diskon 20%. Jika harga awal Rp125.000, hasil f(x) adalah ...", "o": ["Rp95.000", "Rp100.000", "Rp105.000", "Rp110.000"], "a": 1}, {"level": "MOTS", "materi": "Fungsi", "q": "Sebuah program menerima 135 menit sebagai input dan mengubahnya menjadi jam dan menit. Output yang tepat adalah ...", "o": ["1 jam 15 menit", "2 jam 5 menit", "2 jam 15 menit", "3 jam 15 menit"], "a": 2}, {"level": "LOTS", "materi": "Himpunan", "q": "Diketahui A={1,2,3,4} dan B={3,4,5,6}. Hasil A ∩ B adalah ...", "o": ["{1,2}", "{3,4}", "{1,2,3,4,5,6}", "{5,6}"], "a": 1}, {"level": "LOTS", "materi": "Himpunan", "q": "Diketahui A={a,b,c} dan B={c,d}. Hasil A ∪ B adalah ...", "o": ["{c}", "{a,b,d}", "{a,b,c,d}", "{a,c,d}"], "a": 2}, {"level": "MOTS", "materi": "Himpunan", "q": "A adalah siswa yang mengikuti klub coding dan B adalah siswa yang mengikuti klub desain. Siswa yang mengikuti kedua klub termasuk ...", "o": ["A ∪ B", "A ∩ B", "A − B", "B − A"], "a": 1}, {"level": "HOTS", "materi": "Himpunan", "q": "Dalam survei 32 siswa, 19 menyukai pemrograman, 16 menyukai desain, dan 7 menyukai keduanya. Banyak siswa yang menyukai setidaknya salah satu adalah ...", "o": ["25", "28", "30", "35"], "a": 1}, {"level": "LOTS", "materi": "Himpunan", "q": "Himpunan adalah kumpulan objek yang ...", "o": ["selalu berupa angka", "anggotanya harus banyak", "dapat didefinisikan dengan jelas", "selalu disusun dari kecil ke besar"], "a": 2}, {"level": "LOTS", "materi": "Sistem Bilangan", "q": "Sistem bilangan desimal menggunakan basis ...", "o": ["2", "8", "10", "16"], "a": 2}, {"level": "LOTS", "materi": "Sistem Bilangan", "q": "Sistem bilangan biner hanya menggunakan simbol ...", "o": ["0 dan 1", "1 dan 2", "0 sampai 7", "0 sampai 9"], "a": 0}, {"level": "LOTS", "materi": "Sistem Bilangan", "q": "Sistem bilangan heksadesimal menggunakan basis ...", "o": ["8", "10", "12", "16"], "a": 3}, {"level": "MOTS", "materi": "Sistem Bilangan", "q": "Dalam heksadesimal, simbol setelah 9 adalah ...", "o": ["A", "B", "10", "F"], "a": 0}, {"level": "MOTS", "materi": "Sistem Bilangan", "q": "Bilangan desimal 13 jika dikonversi ke biner adalah ...", "o": ["1010₂", "1011₂", "1101₂", "1110₂"], "a": 2}, {"level": "MOTS", "materi": "Sistem Bilangan", "q": "Bilangan biner 1011₂ jika dikonversi ke desimal adalah ...", "o": ["9", "10", "11", "12"], "a": 2}, {"level": "MOTS", "materi": "Sistem Bilangan", "q": "Bilangan desimal 24 jika dikonversi ke oktal adalah ...", "o": ["26₈", "30₈", "32₈", "34₈"], "a": 1}, {"level": "HOTS", "materi": "Sistem Bilangan", "q": "Sebuah sensor mengirim kode 100000₂. Seorang siswa mengatakan nilainya 16 karena ada enam digit. Pernyataan yang benar adalah ...", "o": ["Benar, enam digit berarti 16", "Salah, 100000₂ bernilai 32", "Benar, karena 2⁴=16", "Salah, nilainya 64"], "a": 1}, {"level": "HOTS", "materi": "Sistem Bilangan", "q": "Urutan 1₂, 10₂, 11₂, 100₂ jika diubah ke desimal menjadi ...", "o": ["1, 2, 3, 4", "1, 2, 3, 5", "1, 2, 4, 8", "1, 3, 4, 5"], "a": 0}, {"level": "LOTS", "materi": "Struktur Data", "q": "Struktur data adalah cara ...", "o": ["menghias tampilan program", "mengatur dan menyimpan data agar dapat digunakan dengan efektif", "menghubungkan komputer ke internet", "mengubah bahasa pemrograman"], "a": 1}, {"level": "LOTS", "materi": "Stack", "q": "Stack adalah struktur data yang bekerja seperti ...", "o": ["antrean loket", "tumpukan piring", "daftar hadir", "jaringan komputer"], "a": 1}, {"level": "LOTS", "materi": "Stack", "q": "Prinsip utama pada Stack adalah ...", "o": ["FIFO", "LIFO", "acak masuk acak keluar", "first in first out"], "a": 1}, {"level": "LOTS", "materi": "Stack", "q": "Operasi untuk menambahkan data ke Stack disebut ...", "o": ["pop", "push", "peek", "sort"], "a": 1}, {"level": "LOTS", "materi": "Stack", "q": "Operasi untuk mengambil/menghapus data paling atas dari Stack disebut ...", "o": ["push", "pop", "peek", "insert"], "a": 1}, {"level": "HOTS", "materi": "Stack", "q": "Sebuah Stack berisi A, B, C (C paling atas). Dilakukan pop, lalu push D. Jika dilakukan pop lagi, urutan data yang keluar adalah ...", "o": ["A lalu B", "C lalu D", "B lalu D", "D lalu C"], "a": 1}];
-const SHEET_WEB_APP_URL="https://script.google.com/macros/s/AKfycbyIcSForpofbfrax-0ktDXIJkRgmLgdeeUdGTxdemirM_PyJaQweEXvR8226pVMoe0X/exec";
+const QUESTIONS=[
+{level:"LOTS",materi:"Fungsi",tag:"Pengetahuan",il:"machine",q:"Di sebuah mesin tiket, siswa memasukkan jumlah tiket. Mesin kemudian menghitung total harga dan menampilkan hasilnya. Dalam konsep fungsi, jumlah tiket yang dimasukkan merupakan ...",o:["output","input","proses","aturan"],a:1},
+{level:"MOTS",materi:"Fungsi",tag:"Numerasi",il:"calculator",q:"Sebuah aplikasi menghitung poin dengan aturan f(x)=2x+3. Jika inputnya 7, berapa output aplikasi?",o:["14","15","17","21"],a:2},
+{level:"MOTS",materi:"Fungsi",tag:"Literasi",il:"canteen",q:"Kantin membuat sistem: total bayar = harga makanan × jumlah + biaya kemasan Rp2.000. Rani membeli 3 makanan seharga Rp8.000 per buah. Output yang benar adalah ...",o:["Rp24.000","Rp25.000","Rp26.000","Rp30.000"],a:2},
+{level:"HOTS",materi:"Fungsi",tag:"Numerasi",il:"code",q:"Sebuah program memberi kode berdasarkan f(x)=3x+2. Ketika kode yang tampil adalah 29, nomor peserta yang menjadi input adalah ...",o:["7","8","9","10"],a:2},
+{level:"HOTS",materi:"Fungsi",tag:"Analisis",il:"wrong",q:"Dina membuat fungsi untuk mengubah suhu Celsius menjadi Fahrenheit. Ia memasukkan 30°C, tetapi program menampilkan 30°F. Bagian yang paling mungkin bermasalah adalah ...",o:["Input tidak boleh berupa angka","Proses/aturan fungsi belum diterapkan dengan benar","Output harus selalu berupa Celsius","Nama pengguna salah"],a:1},
+
+{level:"LOTS",materi:"Himpunan",tag:"Pengetahuan",il:"boxes",q:"Guru ingin membuat kelompok siswa yang 'mengikuti klub coding'. Agar dapat disebut himpunan, anggota kelompok harus ...",o:["dipilih secara acak","dapat ditentukan dengan jelas","selalu berjumlah 10","harus memiliki nilai yang sama"],a:1},
+{level:"LOTS",materi:"Himpunan",tag:"Konsep",il:"venn",q:"Pada diagram Venn, bagian yang menunjukkan anggota yang berada di A dan juga di B disebut ...",o:["A ∪ B","A ∩ B","A − B","B − A"],a:1},
+{level:"MOTS",materi:"Himpunan",tag:"Literasi",il:"clubs",q:"Dari 30 siswa, 18 mengikuti klub coding, 12 mengikuti klub desain, dan 5 mengikuti keduanya. Banyak siswa yang mengikuti setidaknya salah satu klub adalah ...",o:["20","25","30","35"],a:1},
+{level:"HOTS",materi:"Himpunan",tag:"Analisis",il:"devices",q:"Petugas laboratorium mencatat A = perangkat yang memiliki keyboard dan B = perangkat yang memiliki layar sentuh. Tablet tidak memiliki keyboard tetapi memiliki layar sentuh. Tablet berada di ...",o:["A saja","B saja","A ∩ B","di luar A dan B"],a:1},
+{level:"MOTS",materi:"Himpunan",tag:"Penalaran",il:"survey",q:"Sebuah kelas memilih olahraga. A = siswa yang memilih basket, B = siswa yang memilih futsal. Jika seorang siswa memilih basket dan futsal sekaligus, ia termasuk ...",o:["A saja","B saja","A ∩ B","A − B"],a:2},
+
+{level:"LOTS",materi:"Sistem Bilangan",tag:"Pengetahuan",il:"bases",q:"Sebuah komputer menyimpan data dalam beberapa sistem bilangan. Pasangan basis yang benar adalah ...",o:["Biner = 2, Oktal = 8, Desimal = 10","Biner = 8, Oktal = 2, Desimal = 16","Biner = 10, Oktal = 8, Desimal = 2","Biner = 16, Oktal = 10, Desimal = 8"],a:0},
+{level:"LOTS",materi:"Sistem Bilangan",tag:"Pengetahuan",il:"hex",q:"Dalam sistem bilangan heksadesimal, setelah angka 9 digunakan simbol ...",o:["G, H, I, J, K, L","A, B, C, D, E, F","X, Y, Z, A, B, C","0, 1, 2, 3, 4, 5"],a:1},
+{level:"MOTS",materi:"Sistem Bilangan",tag:"Numerasi",il:"binary",q:"Komputer menampilkan 1011₂. Jika diubah ke desimal, nilainya adalah ...",o:["9","10","11","12"],a:2},
+{level:"MOTS",materi:"Sistem Bilangan",tag:"Numerasi",il:"decimal",q:"Lampu indikator menyimpan kode desimal 13. Jika harus diubah ke biner, kode yang tepat adalah ...",o:["1010₂","1011₂","1101₂","1110₂"],a:2},
+{level:"MOTS",materi:"Sistem Bilangan",tag:"Numerasi",il:"octal",q:"Sebuah alat menggunakan kode oktal 30₈. Nilai desimal kode tersebut adalah ...",o:["18","24","30","32"],a:1},
+{level:"HOTS",materi:"Sistem Bilangan",tag:"Analisis",il:"debug",q:"Raka berkata, '100000₂ = 16 karena ada enam digit.' Penjelasan yang paling tepat adalah ...",o:["Benar, karena enam digit selalu bernilai 16","Salah, 100000₂ bernilai 32 karena posisi digit paling kiri bernilai 2⁵","Salah, semua bilangan biner bernilai sama dengan jumlah digit","Benar, karena 2⁴ = 16 dan ada empat angka nol"],a:1},
+{level:"HOTS",materi:"Sistem Bilangan",tag:"Literasi",il:"network",q:"Sebuah perangkat jaringan memberi kode 2A₁₆. Teknisi perlu mengetahui nilainya dalam desimal. Berapa nilai 2A₁₆?",o:["32","40","42","46"],a:2},
+
+{level:"LOTS",materi:"Struktur Data",tag:"Pengetahuan",il:"stack",q:"Guru menyusun beberapa buku bertumpuk. Buku yang terakhir diletakkan harus diambil lebih dulu. Struktur data yang paling mirip dengan kondisi tersebut adalah ...",o:["Queue","Stack","Tree","Graph"],a:1},
+{level:"LOTS",materi:"Stack",tag:"Pengetahuan",il:"push",q:"Pada aplikasi undo, sebuah aksi baru harus ditempatkan di bagian paling atas tumpukan riwayat. Operasi Stack yang digunakan adalah ...",o:["pop","push","peek","search"],a:1},
+{level:"LOTS",materi:"Stack",tag:"Pengetahuan",il:"pop",q:"Sebuah Stack berisi data A, B, C dengan C berada paling atas. Jika satu data diambil dari atas, operasi yang digunakan disebut ...",o:["push","pop","peek","sort"],a:1},
+{level:"MOTS",materi:"Stack",tag:"Penalaran",il:"plates",q:"Stack berisi piring: merah dimasukkan pertama, biru kedua, hijau terakhir. Jika dua piring diambil, urutan warna yang keluar adalah ...",o:["merah lalu biru","biru lalu merah","hijau lalu biru","hijau lalu merah"],a:2},
+{level:"MOTS",materi:"Stack",tag:"Analisis",il:"math",q:"Sebuah program memakai Stack untuk membantu membaca ekspresi matematika. Jika data yang masuk berturut-turut adalah 4, 7, 9 lalu dilakukan pop dua kali, data yang keluar adalah ...",o:["4 lalu 7","7 lalu 9","9 lalu 7","9 lalu 4"],a:2},
+{level:"HOTS",materi:"Stack",tag:"Problem Solving",il:"warehouse",q:"Di gudang, kotak hanya bisa diambil dari bagian paling atas. Urutan kotak dari bawah ke atas adalah A, B, C, D. Petugas harus mengambil C, tetapi D masih di atasnya. Strategi yang sesuai prinsip Stack adalah ...",o:["Mengambil C langsung tanpa memindahkan D","Mengeluarkan D terlebih dahulu, kemudian C","Mengambil A terlebih dahulu agar tumpukan seimbang","Mengacak semua kotak agar C berada paling atas"],a:1},
+{level:"HOTS",materi:"Struktur Data",tag:"Problem Solving",il:"browser",q:"Sebuah browser menyimpan halaman yang baru saja dibuka dalam Stack. Urutannya: Beranda → Video → Artikel. Ketika tombol Back ditekan satu kali, halaman yang kembali dituju adalah ...",o:["Beranda","Video","Artikel","Halaman baru"],a:1},
+{level:"HOTS",materi:"Stack",tag:"Analisis",il:"sequence",q:"Sebuah Stack awalnya kosong. Operasi dilakukan: push A, push B, push C, pop, push D, pop. Urutan data yang keluar adalah ...",o:["A lalu B","C lalu D","B lalu D","D lalu C"],a:1}
+];
+const SHEET_WEB_APP_URL="PASTE_URL_APPS_SCRIPT_DI_SINI";
 let order=[],answers=[],current=0,seconds=3600,timerId=null,started=false,tabWarnings=0;
 
+let audioCtx=null,masterGain=null,oscillators=[],soundOn=false;
+function startSound(){try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume();if(soundOn&&oscillators.length===0){masterGain=audioCtx.createGain();masterGain.gain.value=.015;masterGain.connect(audioCtx.destination);[196,246.94,293.66].forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type="sine";o.frequency.value=f;g.gain.value=.16/(i+1);o.connect(g);g.connect(masterGain);o.start();oscillators.push(o)})}}catch(e){}}
+function stopSound(){oscillators.forEach(o=>{try{o.stop()}catch(e){}});oscillators=[];if(masterGain){try{masterGain.disconnect()}catch(e){}}}
+function toggleSound(){soundOn=!soundOn;if(soundOn)startSound();else stopSound();const b=document.getElementById("soundBtn");if(b)b.textContent=soundOn?"ON":"OFF";const m=document.getElementById("miniSound");if(m)m.textContent=soundOn?"🔊":"🔇"}
 function startExam(){
  const n=document.getElementById('name').value.trim(),c=document.getElementById('class').value,a=document.getElementById('absen').value.trim();
  if(!n||!c||!a){alert('Nama, kelas, dan nomor absen harus diisi.');return;}
@@ -134,13 +185,25 @@ function updateTimer(){
  const m=String(Math.floor(seconds/60)).padStart(2,'0'),s=String(seconds%60).padStart(2,'0'),t=document.getElementById('timer');
  t.textContent=m+':'+s;t.className='pill timer'+(seconds<=300?' warn':'');
 }
+
+function illustration(type){
+ const map={
+  machine:"🖥️⚙️",calculator:"🧮✨",canteen:"🍱💳",code:"🔢🔐",wrong:"🌡️⚠️",
+  boxes:"📦👥",venn:"⭕⭕",clubs:"💻🎨",devices:"💻📱",survey:"🏀⚽",
+  bases:"🔢🧩",hex:"🔠🔢",binary:"0️⃣1️⃣",decimal:"🔟➡️",octal:"🔢🧮",
+  debug:"🐞🔍",network:"🌐🔢",stack:"📚⬆️",push:"➕📚",pop:"➖📚",
+  plates:"🍽️📚",math:"➗➕📚",warehouse:"🏭📦",browser:"🌐↩️",sequence:"🔄📚"
+ };
+ return `<div class="q-illustration"><div class="illus-icon">${map[type]||"💡"}</div><div class="illus-lines"><span></span><span></span><span></span></div></div>`;
+}
+
 function render(){
  const idx=order[current],x=QUESTIONS[idx];
  document.getElementById('counter').textContent=`Soal ${current+1} / ${QUESTIONS.length}`;
  document.getElementById('level').textContent=`${x.level} • ${x.materi}`;
- document.getElementById('question').textContent=x.q;
+ const qEl=document.getElementById('question');qEl.classList.remove('slide-in');void qEl.offsetWidth;qEl.classList.add('slide-in');qEl.innerHTML=illustration(x.il)+`<div class="q-text">${x.q}</div>`;
  const box=document.getElementById('options');box.innerHTML='';
- x.o.forEach((v,k)=>{const b=document.createElement('button');b.className='option'+(answers[idx]===k?' selected':'');b.textContent=String.fromCharCode(65+k)+'. '+v;b.onclick=()=>{answers[idx]=k;render()};box.appendChild(b)});
+ x.o.forEach((v,k)=>{const b=document.createElement('button');b.className='option'+(answers[idx]===k?' selected':'');b.innerHTML=`<span class="letter">${String.fromCharCode(65+k)}</span><span>${v}</span>`;b.onclick=()=>{answers[idx]=k;render()};box.appendChild(b)});
  document.getElementById('bar').style.width=((current+1)/QUESTIONS.length*100)+'%';
  document.getElementById('nextBtn').textContent=current===QUESTIONS.length-1?'Kumpulkan ✓':'Berikutnya →';
  drawNumbers();
@@ -155,21 +218,22 @@ function nextQuestion(){
 }
 function prevQuestion(){if(current>0){current--;render()}}
 function finishExam(auto){
- if(!started)return;started=false;clearInterval(timerId);timerId=null;
+ if(!started)return;started=false;clearInterval(timerId);timerId=null;stopSound();
  let correct=0,stats={LOTS:[0,0],MOTS:[0,0],HOTS:[0,0]};
  QUESTIONS.forEach((x,i)=>{stats[x.level][1]++;if(answers[i]===x.a){correct++;stats[x.level][0]++}});
  const score=Math.round(correct/QUESTIONS.length*100),used=Math.min(60,Math.ceil((3600-seconds)/60));
  document.getElementById('examScreen').classList.add('hidden');document.getElementById('resultScreen').classList.remove('hidden');
  document.getElementById('resultName').textContent=document.getElementById('name').value;
  document.getElementById('score').textContent=score;
- document.getElementById('summary').textContent=`$ {correct} dari ${QUESTIONS.length} jawaban benar • waktu sekitar ${used} menit`;
+ document.getElementById('summary').textContent=`${correct} dari ${QUESTIONS.length} jawaban benar • waktu sekitar ${used} menit`;
  const rg=document.getElementById('resultGrid');rg.innerHTML='';
  ['LOTS','MOTS','HOTS'].forEach(k=>{const d=document.createElement('div');d.className='resultitem';d.innerHTML=`<small>${k}</small><b>${stats[k][0]} / ${stats[k][1]}</b>`;rg.appendChild(d)});
- document.getElementById('sendMessage').textContent='Mengirim hasil ke spreadsheet...';
+ document.getElementById('sendMessage').textContent='Mengirim hasil ke spreadsheet...';confetti();
  sendToSheet(score,correct,stats,used,auto).then(ok=>{document.getElementById('sendMessage').textContent=ok?'✓ Hasil sudah dikirim ke Google Sheets.':'⚠️ Hasil belum tersambung ke Google Sheets. Periksa URL Apps Script pada file.'});
  try{document.exitFullscreen?.()}catch(e){}
 }
-async function sendToSheet(score,correct,stats,used,auto){
+async function confetti(){const card=document.querySelector(".result");if(!card)return;for(let i=0;i<35;i++){const c=document.createElement("i");c.style.cssText=`position:absolute;left:${10+Math.random()*80}%;top:-15px;width:7px;height:12px;background:hsl(${Math.random()*360},80%,70%);border-radius:2px;animation:fall 1.8s ease-in forwards;animation-delay:${Math.random()*.6}s`;card.appendChild(c);setTimeout(()=>c.remove(),2500)}}
+function sendToSheet(score,correct,stats,used,auto){
  if(!SHEET_WEB_APP_URL || SHEET_WEB_APP_URL.includes('PASTE_URL'))return false;
  const payload={
   timestamp:new Date().toISOString(),
