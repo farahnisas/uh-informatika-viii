@@ -120,13 +120,44 @@ label{display:block;margin:12px 0 6px;color:#d0daea;font-size:10px;font-weight:1
  to{filter:drop-shadow(0 20px 38px rgba(155,124,255,.32))}
 }
 @media(max-width:850px){
- #startScreen .card.start{display:block;height:100vh}
+ html,body{
+   width:100%;
+   height:auto !important;
+   min-height:100%;
+   overflow-x:hidden !important;
+   overflow-y:auto !important;
+ }
+ #startScreen.shell{
+   width:100%;
+   height:auto !important;
+   min-height:100vh;
+   display:block;
+   overflow-x:hidden !important;
+   overflow-y:auto !important;
+   padding:12px;
+ }
+ #startScreen .card.start{
+   display:block;
+   width:100%;
+   height:auto !important;
+   min-height:100vh;
+   max-height:none !important;
+   overflow:visible !important;
+ }
  #startScreen .hero{display:flex;min-height:38vh;padding:25px 24px}
  #startScreen .robot{width:105px;height:105px;right:15px;top:16px}
  #startScreen .hero h1{font-size:47px;max-width:70%}
  #startScreen .lead{max-width:90%}
  #startScreen .infochips{grid-template-columns:repeat(2,1fr)}
- #startScreen .form{border-left:0;padding:25px}
+ #startScreen .form{
+   border-left:0;
+   padding:25px 25px 40px;
+   min-height:auto;
+   overflow:visible;
+ }
+ #startScreen input,#startScreen select,#startScreen .startbtn{
+   min-height:50px;
+ }
 }
 </style>
 </head>
