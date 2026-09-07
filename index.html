@@ -187,7 +187,7 @@ label{display:block;margin:12px 0 6px;color:#d0daea;font-size:10px;font-weight:1
  <rect x="43" y="143" width="30" height="9" rx="4" fill="#9b7cff"/><rect x="117" y="143" width="30" height="9" rx="4" fill="#9b7cff"/>
 </svg>
    <div class="eyebrow">INFORMATIKA • KELAS VIII</div>
-   <h1>ULANGAN HARIAN<span>BAB I</span></h1>
+   <h1>ULANGAN HARIAN<span>BAB II</span></h1>
    <p class="lead">Uji pemahamanmu pada materi <b>Fungsi, Himpunan, Sistem Bilangan, dan Struktur Data (Stack)</b> melalui soal pengetahuan, literasi, numerasi, dan pemecahan masalah.</p>
    <div class="infochips">
     <div class="chip"><b>25</b><span>SOAL</span></div><div class="chip"><b>60</b><span>MENIT</span></div><div class="chip"><b>A–D</b><span>PILIHAN GANDA</span></div><div class="chip"><b>100</b><span>NILAI MAKS.</span></div>
@@ -211,7 +211,7 @@ label{display:block;margin:12px 0 6px;color:#d0daea;font-size:10px;font-weight:1
  <div class="card exam">
   <header class="topbar">
    <div class="brandmini"><span class="miniicon">⚡</span><span>UH INFORMATIKA VIII <b>• BAB II</b></span></div>
-   <div class="topmeta"><button id="miniSound" class="toggle miniToggle on" type="button" onclick="toggleSound()">ON</button><span id="counter" class="pill"></span><span id="warnings" class="pill cheat">Pindah tab: 0/4</span><span id="timer" class="pill timer">60:00</span></div>
+   <div class="topmeta"><button id="miniSound" class="toggle miniToggle on" type="button" onclick="toggleSound()">ON</button><span id="counter" class="pill"></span><span id="warnings" class="pill cheat">Pindah tab: 0/3</span><span id="timer" class="pill timer">60:00</span></div>
   </header>
   <div class="progresswrap"><div class="progress"><div id="bar" class="bar"></div></div></div>
   <div class="body">
@@ -276,7 +276,7 @@ const QUESTIONS=[
 const SHEET_WEB_APP_URL="https://script.google.com/macros/s/AKfycbyIcSForpofbfrax-0ktDXIJkRgmLgdeeUdGTxdemirM_PyJaQweEXvR8226pVMoe0X/exec";
 let order=[],answers=[],current=0,seconds=3600,timerId=null,started=false,tabWarnings=0,ending=false;
 let audioCtx=null,masterGain=null,musicTimer=null,soundOn=true;
-const LOCK_KEY="UH_INFORMATIKA_VIII_LOCKED_V7";
+const LOCK_KEY="UH_INFORMATIKA_VIII_LOCKED_V6";
 
 const SVG_SCENES = {
 machine:`<svg viewBox="0 0 620 145"><text x="310" y="20" text-anchor="middle" fill="#9cafc8" font-size="10" font-weight="900">INPUT → PROSES → OUTPUT</text><rect x="70" y="45" width="120" height="55" rx="14" fill="#0e2037" stroke="#41e8ff" stroke-width="3"/><text x="130" y="78" text-anchor="middle" fill="#fff" font-size="18" font-weight="900">INPUT</text><path d="M205 72h70" stroke="#9b7cff" stroke-width="6"/><path d="M258 57l18 15-18 15" fill="none" stroke="#9b7cff" stroke-width="6"/><rect x="300" y="45" width="120" height="55" rx="14" fill="#13294a" stroke="#9b7cff" stroke-width="3"/><text x="360" y="78" text-anchor="middle" fill="#fff" font-size="18" font-weight="900">PROSES</text><path d="M435 72h70" stroke="#41e8ff" stroke-width="6"/><path d="M488 57l18 15-18 15" fill="none" stroke="#41e8ff" stroke-width="6"/><rect x="530" y="45" width="70" height="55" rx="14" fill="#183b36" stroke="#63e8b8" stroke-width="3"/><text x="565" y="78" text-anchor="middle" fill="#63e8b8" font-size="15" font-weight="900">HASIL</text></svg>`,
@@ -323,7 +323,6 @@ function playClick(){if(!soundOn||!audioCtx)return;try{const o=audioCtx.createOs
 
 function startExam(){
  const n=document.getElementById("name").value.trim(),c=document.getElementById("class").value,a=document.getElementById("absen").value.trim();
- if(localStorage.getItem(LOCK_KEY)==="1"){showLocked();return}
  if(!n||!c||!a){alert("Nama, kelas, dan nomor absen harus diisi.");return}
  order=[...Array(QUESTIONS.length).keys()].sort(()=>Math.random()-.5);answers=Array(QUESTIONS.length).fill(null);current=0;seconds=3600;started=true;ending=false;tabWarnings=0;
  document.getElementById("startScreen").classList.add("hidden");document.getElementById("examScreen").classList.remove("hidden");updateWarnings();updateTimer();setSoundUI();
@@ -358,7 +357,20 @@ function finishExam(reason){
  QUESTIONS.forEach((x,i)=>{if(!stats[x.level])stats[x.level]=[0,0];stats[x.level][1]++;if(answers[i]===x.a){correct++;stats[x.level][0]++}});
  const score=Math.round(correct/QUESTIONS.length*100),used=Math.min(60,Math.max(1,Math.ceil((3600-seconds)/60)));
  if(reason==="cheat"){
-  localStorage.setItem(LOCK_KEY,"1");document.getElementById("examScreen").classList.add("hidden");document.getElementById("lockedScreen").classList.remove("hidden");sendToSheet(score,correct,stats,used,false,true);try{document.exitFullscreen?.()}catch(e){}return;
+  document.getElementById("examScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+  document.getElementById("resultName").textContent=document.getElementById("name").value;
+  document.getElementById("score").textContent=score;
+  document.getElementById("summary").textContent=`Ulangan diakhiri karena 3 kali berpindah tab • ${correct} dari ${QUESTIONS.length} jawaban benar`;
+  const rg=document.getElementById("resultGrid");rg.innerHTML="";
+  ["LOTS","MOTS","HOTS"].forEach(k=>{const d=document.createElement("div");d.className="resultitem";d.innerHTML=`<small>${k}</small><b>${stats[k][0]} / ${stats[k][1]}</b>`;rg.appendChild(d)});
+  const al=document.getElementById("answerList");al.innerHTML="";
+  QUESTIONS.forEach((x,i)=>{const item=document.createElement("div");item.innerHTML=`<b>${i+1}. ${String.fromCharCode(65+x.a)}</b> — ${x.o[x.a]}`;al.appendChild(item)});
+  document.getElementById("resultStatus").textContent="Ulangan dihentikan karena 3 kali berpindah tab. Kamu dapat mengerjakan ulang dengan membuka kembali halaman ulangan.";
+  sendToSheet(score,correct,stats,used,false,true);
+  try{document.exitFullscreen?.()}catch(e){}
+  confetti();
+  return;
  }
  document.getElementById("examScreen").classList.add("hidden");document.getElementById("resultScreen").classList.remove("hidden");
  document.getElementById("resultName").textContent=document.getElementById("name").value;document.getElementById("score").textContent=score;document.getElementById("summary").textContent=`${correct} dari ${QUESTIONS.length} jawaban benar • waktu sekitar ${used} menit`;
@@ -374,7 +386,7 @@ async function sendToSheet(score,correct,stats,used,auto,cheat){
  try{await fetch(SHEET_WEB_APP_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});return true}catch(e){return false}
 }
 function showLocked(){document.getElementById("startScreen").classList.add("hidden");document.getElementById("lockedScreen").classList.remove("hidden")}
-window.addEventListener("load",()=>{setSoundUI();if(localStorage.getItem(LOCK_KEY)==="1")showLocked()});
+window.addEventListener("load",()=>{setSoundUI()});
 document.addEventListener("contextmenu",e=>e.preventDefault());document.addEventListener("copy",e=>e.preventDefault());document.addEventListener("cut",e=>e.preventDefault());document.addEventListener("paste",e=>e.preventDefault());
 document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&["c","v","x","u","s","p"].includes(e.key.toLowerCase()))e.preventDefault();if(e.key==="F12")e.preventDefault()});
 </script>
