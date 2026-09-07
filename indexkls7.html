@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ulangan Harian Informatika Kelas VII</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#eef4ff,#fff7ed);color:#172033}
+.container{max-width:900px;margin:auto;padding:18px}
+.card{background:#fff;border-radius:22px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,.09);margin:15px 0}
+h1,h2{margin-top:0}.subtitle{color:#64748b}
+button{border:0;border-radius:13px;padding:13px 20px;font-size:16px;cursor:pointer;background:#2563eb;color:#fff}
+button:hover{transform:translateY(-1px)}button:disabled{opacity:.45;cursor:not-allowed}
+.secondary{background:#e2e8f0;color:#172033}
+.hidden{display:none!important}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:16px}
+.timer{font-weight:bold;background:#fee2e2;color:#b91c1c;padding:9px 13px;border-radius:12px}
+.progress{height:9px;background:#e2e8f0;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:#2563eb;transition:.3s}
+.option{display:block;width:100%;text-align:left;background:#f8fafc;color:#172033;border:2px solid #e2e8f0;margin:10px 0;padding:15px;border-radius:12px}
+.option.selected{border-color:#2563eb;background:#eff6ff}
+.nav{display:flex;justify-content:space-between;margin-top:20px;gap:10px}
+input{width:100%;padding:13px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px;margin:7px 0 15px}
+.info{padding:14px;border-radius:14px;background:#eff6ff;margin:15px 0}
+.warning{background:#fff7ed;color:#9a3412}.small{font-size:13px;color:#64748b}
+.result{text-align:center}.emoji{font-size:90px;animation:bounce 1.2s infinite}.score{font-size:60px;font-weight:800;color:#2563eb}
+.review{text-align:left;margin-top:25px}.review-item{padding:14px;border-bottom:1px solid #e2e8f0}
+.cheat{position:fixed;right:18px;bottom:18px;background:#fff7ed;color:#9a3412;padding:10px 14px;border-radius:12px;box-shadow:0 5px 20px rgba(0,0,0,.12);font-size:13px}
+@keyframes bounce{50%{transform:translateY(-10px) rotate(4deg)}}
+@media(max-width:600px){.card{padding:20px}.container{padding:10px}.top{align-items:flex-start}.nav button{font-size:14px;padding:11px}}
+</style>
+</head>
+<body oncontextmenu="return false">
+<div class="container">
+
+<div id="start" class="card">
+<h1>🧠 Ulangan Harian Informatika</h1>
+<p class="subtitle">Kelas VII • Informatika & Berpikir Komputasional</p>
+<div class="info">
+<b>25 soal</b> • LOTS, MOTS, dan HOTS<br>
+Materi: Mengenal Informatika, Keterampilan Generik, Berpikir Komputasional, Algoritma, Efektif–Efisien–Optimal, dan Optimasi Penjadwalan.
+</div>
+<div class="info warning">⚠️ Selama ulangan jangan membuka tab/aplikasi lain, menyalin teks, atau keluar dari halaman. Sistem akan mencatat pelanggaran.</div>
+<label>Nama Lengkap</label>
+<input id="name" placeholder="Masukkan nama kamu">
+<label>Kelas</label>
+<input id="className" placeholder="Contoh: 7A">
+<button onclick="startQuiz()">🚀 Mulai Ulangan</button>
+</div>
+
+<div id="quiz" class="card hidden">
+<div class="top">
+<div><b id="number"></b><div class="small" id="category"></div></div>
+<div class="timer" id="timer">25:00</div>
+</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<h2 id="question"></h2>
+<div id="options"></div>
+<div class="nav">
+<button class="secondary" id="prev" onclick="prevQ()">← Sebelumnya</button>
+<button id="next" onclick="nextQ()">Berikutnya →</button>
+</div>
+</div>
+
+<div id="result" class="card hidden result">
+<div id="resultEmoji" class="emoji">🎉</div>
+<h1 id="resultTitle"></h1>
+<p id="resultName"></p>
+<div class="score" id="score"></div>
+<p id="detail"></p>
+<p id="cheatResult" class="small"></p>
+<button onclick="location.reload()">🔄 Kerjakan Lagi</button>
+<div class="review" id="review"></div>
+</div>
+</div>
+
+<div id="cheatCounter" class="cheat hidden">⚠️ Pelanggaran: <b id="violations">0</b>/3</div>
+
+<script>
+const questions=[
+{level:"LOTS",c:"Informatika",q:"Informatika adalah bidang yang mempelajari...",o:["Cara menggunakan media sosial saja","Pengolahan informasi dan pemecahan masalah dengan sistem komputasi","Cara memperbaiki semua jenis komputer","Cara bermain game"],a:1},
+{level:"LOTS",c:"Informatika",q:"Salah satu peran informatika dalam kehidupan sehari-hari adalah...",o:["Membantu mengolah dan menyajikan informasi","Membuat semua manusia tidak perlu bekerja","Menghilangkan kebutuhan belajar","Membuat keputusan manusia selalu benar"],a:0},
+{level:"MOTS",c:"Informatika",q:"Aplikasi peta digital dapat membantu seseorang memilih rute perjalanan. Contoh tersebut menunjukkan informatika membantu...",o:["Menggambar tanpa tujuan","Memecahkan masalah dalam kehidupan sehari-hari","Menghapus data","Mengurangi jumlah kendaraan secara otomatis"],a:1},
+{level:"LOTS",c:"Keterampilan Generik",q:"Kegiatan membagi tugas dan bekerja bersama untuk mencapai tujuan merupakan...",o:["Kerja kelompok","Abstraksi","Dekomposisi data","Enkripsi"],a:0},
+{level:"MOTS",c:"Keterampilan Generik",q:"Saat berdiskusi, pendapat teman berbeda dengan pendapatmu. Sikap yang paling tepat adalah...",o:["Memotong pembicaraan","Mendengarkan alasan lalu mendiskusikannya","Memaksakan pendapat sendiri","Tidak mau bekerja lagi"],a:1},
+{level:"MOTS",c:"Keterampilan Generik",q:"Presentasi yang baik sebaiknya dilakukan dengan...",o:["Penjelasan runtut dan mudah dipahami","Membaca semua tulisan tanpa menjelaskan","Berbicara secepat mungkin","Tidak melihat audiens sama sekali"],a:0},
+{level:"LOTS",c:"Berpikir Komputasional",q:"Memecah masalah besar menjadi bagian-bagian kecil disebut...",o:["Abstraksi","Dekomposisi","Optimasi","Presentasi"],a:1},
+{level:"LOTS",c:"Berpikir Komputasional",q:"Mencari kesamaan atau keteraturan dari beberapa data disebut...",o:["Pengenalan pola","Dekomposisi","Algoritma","Komunikasi"],a:0},
+{level:"LOTS",c:"Berpikir Komputasional",q:"Mengambil informasi penting dan mengabaikan informasi yang tidak diperlukan disebut...",o:["Abstraksi","Presentasi","Sorting","Jaringan"],a:0},
+{level:"LOTS",c:"Berpikir Komputasional",q:"Urutan langkah yang sistematis untuk menyelesaikan masalah disebut...",o:["Algoritma","Folder","Data","Grafik"],a:0},
+{level:"MOTS",c:"Berpikir Komputasional",q:"Raka ingin membuat program menghitung rata-rata nilai. Ia memisahkan masalah menjadi input nilai, penjumlahan, pembagian, dan output. Ini contoh...",o:["Dekomposisi","Pengenalan pola","Abstraksi","Optimasi jadwal"],a:0},
+{level:"MOTS",c:"Berpikir Komputasional",q:"Dari data 2, 4, 6, 8, 10, siswa menyadari setiap angka bertambah 2. Ia sedang menggunakan...",o:["Pengenalan pola","Abstraksi","Komunikasi","Presentasi"],a:0},
+{level:"MOTS",c:"Abstraksi",q:"Saat membuat denah menuju sekolah, informasi warna sepatu siswa tidak dicantumkan. Alasannya adalah...",o:["Informasi tersebut tidak penting untuk tujuan denah","Warna sepatu sulit dihitung","Denah harus selalu berwarna hitam putih","Semua informasi harus dihapus"],a:0},
+{level:"LOTS",c:"Algoritma",q:"Langkah pertama yang baik ketika membuat algoritma adalah...",o:["Menentukan masalah atau tujuan","Langsung menulis hasil","Menghapus semua data","Memilih warna tampilan"],a:0},
+{level:"MOTS",c:"Algoritma",q:"Urutan yang paling tepat untuk membuat mi instan adalah...",o:["Makan → masak air → masukkan mi","Masak air → masukkan mi → tunggu matang → sajikan","Sajikan → masak air → makan","Masukkan mi → makan → masak air"],a:1},
+{level:"MOTS",c:"Algoritma",q:"Mengapa langkah algoritma harus berurutan dan jelas?",o:["Agar dapat dilaksanakan sesuai tujuan","Agar terlihat lebih panjang","Agar sulit dipahami","Agar tidak perlu diuji"],a:0},
+{level:"LOTS",c:"Efektif, Efisien, Optimal",q:"Solusi yang berhasil mencapai tujuan disebut...",o:["Efektif","Acak","Tidak valid","Boros"],a:0},
+{level:"LOTS",c:"Efektif, Efisien, Optimal",q:"Solusi yang mencapai tujuan dengan penggunaan waktu atau sumber daya yang hemat disebut...",o:["Efisien","Tidak efektif","Acak","Buntu"],a:0},
+{level:"MOTS",c:"Efektif, Efisien, Optimal",q:"Cara A menyelesaikan tugas dengan benar dalam 15 menit. Cara B benar dalam 7 menit. Keduanya menggunakan sumber daya yang sama. Mana yang lebih efisien?",o:["Cara A","Cara B","Keduanya tidak efisien","Tidak dapat dibandingkan"],a:1},
+{level:"MOTS",c:"Efektif, Efisien, Optimal",q:"Dari beberapa solusi yang sama-sama berhasil, solusi terbaik sesuai tujuan dan batasan disebut...",o:["Optimal","Acak","Tidak efektif","Sementara"],a:0},
+{level:"HOTS",c:"Optimasi Penjadwalan",q:"Satu laboratorium digunakan oleh tiga kelas. Ketiganya meminta jadwal pada pukul 09.00. Apa solusi paling logis?",o:["Membiarkan ketiganya masuk bersamaan","Membagi waktu penggunaan laboratorium","Membatalkan semua kelas","Memilih kelas secara acak"],a:1},
+{level:"HOTS",c:"Optimasi Penjadwalan",q:"Sebuah jadwal memiliki dua kegiatan yang memakai ruang yang sama pada waktu yang sama. Masalah utama pada jadwal tersebut adalah...",o:["Warna jadwal","Konflik waktu dan sumber daya","Ukuran tulisan","Nama kegiatan"],a:1},
+{level:"HOTS",c:"Optimasi Penjadwalan",q:"Empat kelompok harus presentasi. Setiap kelompok membutuhkan 10 menit dan tersedia waktu 40 menit. Agar semua kelompok mendapat kesempatan, strategi terbaik adalah...",o:["Semua presentasi bersamaan","Memberi setiap kelompok satu slot 10 menit","Memilih dua kelompok saja","Membiarkan waktu berjalan tanpa jadwal"],a:1},
+{level:"HOTS",c:"Optimasi Penjadwalan",q:"Dina punya kegiatan A 07.00–08.00, B 07.30–08.30, dan C 08.30–09.00. Jika semua kegiatan menggunakan ruangan yang sama, jadwal mana yang bermasalah?",o:["A dan B","B dan C","A dan C","Tidak ada"],a:0},
+{level:"HOTS",c:"Optimasi Penjadwalan",q:"Sekolah ingin menggunakan satu ruang komputer seefisien mungkin. Ada 3 kelas, masing-masing membutuhkan 30 menit dan tidak boleh bentrok. Jadwal yang paling optimal adalah...",o:["Ketiga kelas memakai ruang bersamaan","Kelas 1 pukul 08.00, kelas 2 pukul 08.30, kelas 3 pukul 09.00","Semua kelas mulai pukul 09.00","Hanya kelas 1 yang menggunakan ruang"],a:1}
+];
+
+let idx=0,answers=Array(questions.length).fill(null),time=1500,timerInt,violations=0,finished=false;
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
+function startQuiz(){
+ if(!document.getElementById("name").value.trim()){alert("Nama harus diisi dulu ya 😊");return;}
+ shuffle(questions);
+ document.getElementById("start").classList.add("hidden");
+ document.getElementById("quiz").classList.remove("hidden");
+ document.getElementById("cheatCounter").classList.remove("hidden");
+ render();
+ timerInt=setInterval(()=>{time--;updateTimer();if(time<=0)finish("Waktu habis");},1000);
+}
+function updateTimer(){let m=Math.floor(time/60),s=time%60;document.getElementById("timer").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;}
+function render(){
+ let q=questions[idx];
+ document.getElementById("number").textContent=`Soal ${idx+1} dari ${questions.length}`;
+ document.getElementById("category").textContent=`${q.c} • ${q.level}`;
+ document.getElementById("question").textContent=q.q;
+ document.getElementById("bar").style.width=((idx+1)/questions.length*100)+"%";
+ let box=document.getElementById("options");box.innerHTML="";
+ q.o.forEach((x,i)=>{let b=document.createElement("button");b.className="option"+(answers[idx]===i?" selected":"");b.textContent=String.fromCharCode(65+i)+". "+x;b.onclick=()=>{answers[idx]=i;render()};box.appendChild(b)});
+ document.getElementById("prev").disabled=idx===0;
+ document.getElementById("next").textContent=idx===questions.length-1?"Selesai ✓":"Berikutnya →";
+}
+function nextQ(){if(idx<questions.length-1){idx++;render()}else finish("Selesai dikerjakan")}
+function prevQ(){if(idx>0){idx--;render()}}
+function addViolation(reason){
+ if(finished)return;
+ violations++;
+ document.getElementById("violations").textContent=violations;
+ if(violations<3) alert(`⚠️ Peringatan ${violations}/3\n${reason}\nJika mencapai 3 pelanggaran, ulangan akan otomatis dikumpulkan.`);
+ else finish("Ulangan dihentikan karena 3 pelanggaran");
+}
+document.addEventListener("visibilitychange",()=>{if(document.hidden)addViolation("Kamu meninggalkan halaman ulangan.");});
+document.addEventListener("copy",e=>{e.preventDefault();addViolation("Menyalin teks tidak diperbolehkan.");});
+document.addEventListener("cut",e=>{e.preventDefault();addViolation("Memotong teks tidak diperbolehkan.");});
+document.addEventListener("paste",e=>{e.preventDefault();addViolation("Menempelkan teks tidak diperbolehkan.");});
+document.addEventListener("keydown",e=>{
+ if((e.ctrlKey||e.metaKey)&&["c","x","v","u","s"].includes(e.key.toLowerCase())){e.preventDefault();addViolation("Shortcut tersebut tidak diperbolehkan saat ulangan.");}
+});
+function finish(reason){
+ if(finished)return;finished=true;clearInterval(timerInt);
+ let benar=answers.reduce((s,a,i)=>s+(a===questions[i].a?1:0),0);
+ let nilai=Math.round(benar/questions.length*100);
+ document.getElementById("quiz").classList.add("hidden");
+ document.getElementById("cheatCounter").classList.add("hidden");
+ document.getElementById("result").classList.remove("hidden");
+ let happy=nilai>=75;
+ document.getElementById("resultEmoji").textContent=happy?"🎉🥳":"😢💪";
+ document.getElementById("resultTitle").textContent=happy?"Yeay, hasilnya bagus!":"Belum mencapai 75, tetap semangat!";
+ document.getElementById("resultName").textContent=document.getElementById("name").value+" • "+(document.getElementById("className").value||"Kelas VII");
+ document.getElementById("score").textContent=nilai;
+ document.getElementById("detail").textContent=`Benar ${benar} dari ${questions.length} soal`;
+ document.getElementById("cheatResult").textContent=`Status ulangan: ${reason}. Pelanggaran tercatat: ${violations}`;
+ let r=document.getElementById("review");r.innerHTML="<h2>📋 Review Jawaban</h2>";
+ questions.forEach((q,i)=>{let ok=answers[i]===q.a;r.innerHTML+=`<div class="review-item"><b>${i+1}. ${ok?"✅ Benar":"❌ Salah"}</b><br>${q.q}<br><span class="small">Jawaban benar: ${q.o[q.a]}</span></div>`});
+}
+</script>
+</body>
+</html>
